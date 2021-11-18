@@ -14,7 +14,7 @@ Manifold Topology Divergence: a Framework for Comparing Data Manifolds. NeurIPS'
 4. Install MTopDiv:
 ```git clone https://github.com/IlyaTrofimov/MTopDiv.git; cd MTopDiv; python setup.py install```
 
-Alternatively, you can use dockerfile. It also contains implementations of other algorithms from the paper (Geometry Score, FID, IMD).
+Alternatively, you can use dockerfile. It also contains implementations of other algorithms which were tested the paper (Geometry Score, FID, IMD).
 In the docker, run ```conda activate py37``` after start. The directory ```MTopDiv/experiments``` contains jupyter notebooks with experiments from the paper.
 
 ### Usage example
