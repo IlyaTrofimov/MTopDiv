@@ -38,4 +38,4 @@ mtd.mtopdiv(P, Q, batch_size1 = 100, batch_size2 = 1000)
 0.035247244
 ```
 
-For GAN evaluation we recommend to use ```0.5 (mtopdiv(P, Q) + mtopdiv(Q, P))```, where P, Q are the point clouds of real and generated objects.
+For GAN evaluation we recommend to use ```0.5 * (mtopdiv(P, Q) + mtopdiv(Q, P))```, where P, Q are the point clouds of real and generated objects.
