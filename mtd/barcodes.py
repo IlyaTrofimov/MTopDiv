@@ -68,10 +68,7 @@ def barc2array(barc):
 
     return np.array(arr, dtype=object)
 
-def count_cross_barcodes(cloud_1, cloud_2, dim, title = '', cuda = 0, is_plot = True, pdist_device = 'cpu'):
-
-    if pdist_device != 'cpu':
-        pdist_device = 'cuda:%d' % cuda
+def count_cross_barcodes(cloud_1, cloud_2, dim, title = '', is_plot = True, pdist_device = 'cpu'):
 
     d = sep_dist(cloud_1, cloud_2, pdist_device = pdist_device)
     m = d[cloud_1.shape[0]:, :cloud_1.shape[0]].mean()
@@ -130,7 +127,7 @@ def plot_barcodes(arr, color_list = ['deepskyblue', 'limegreen', 'darkkhaki'], d
     plt.legend(loc = 'lower right')
     plt.rcParams["figure.figsize"] = [6, 4]
 
-def calc_cross_barcodes(cloud_1, cloud_2, batch_size1 = 4000, batch_size2 = 200, cuda = 0, pdist_device = 'cpu', dim = 1, is_plot = True):
+def calc_cross_barcodes(cloud_1, cloud_2, batch_size1 = 4000, batch_size2 = 200, pdist_device = 'cpu', dim = 1, is_plot = True):
 
     # NB !
     # Swapping point clouds for consistency with the paper
@@ -144,7 +141,7 @@ def calc_cross_barcodes(cloud_1, cloud_2, batch_size1 = 4000, batch_size2 = 200,
     indexes_2 = np.random.choice(cloud_2.shape[0], batch_size2, replace=False)
     cl_1 = cloud_1[indexes_1]
     cl_2 = cloud_2[indexes_2]
-    barc = count_cross_barcodes(cl_1, cl_2, dim, is_plot = is_plot, title = '', cuda = cuda, pdist_device = pdist_device)
+    barc = count_cross_barcodes(cl_1, cl_2, dim, is_plot = is_plot, title = '', pdist_device = pdist_device)
 
     return barc
 
@@ -181,6 +178,13 @@ def get_score(elem, h_idx, kind = ''):
 
     return 0
 
-def mtopdiv(P, Q, batch_size1 = 1000, batch_size2 = 10000, n = 20, cuda = 0, pdist_device = 'cuda:0', is_plot = False):
-    barcs = [calc_cross_barcodes(P, Q, batch_size1, batch_size2, cuda = cuda, pdist_device = pdist_device, is_plot = is_plot) for _ in range(n)]
+#
+# P - first point cloud
+# Q - second point cloud
+# batch_size1 - number of points to sample from the first point cloud
+# batch_size2 - number of points to sample from the second point cloud
+# pdist_device - device to calculate pairwise distances 'cpu'/'cuda:N'
+#
+def mtopdiv(P, Q, batch_size1 = 1000, batch_size2 = 10000, n = 20, pdist_device = 'cuda:0', is_plot = False):
+    barcs = [calc_cross_barcodes(P, Q, batch_size1, batch_size2, pdist_device = pdist_device, is_plot = is_plot) for _ in range(n)]
     return np.mean([get_score(x, 1, 'sum_length') for x in barcs])
